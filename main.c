@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#include <windows.h>
+#include <timeapi.h>
 #include "SearchInFiles.h"
 #include "debug_print.h"
 
@@ -61,7 +63,7 @@ int read_cli_args(int argc, char** argv, int* level, char** src, int* case_ignor
 
 int main(int argc, char** argv)
 {
-
+	DWORD time_start_ms = timeGetTime();
 	if (argc == 2 && strncmp(argv[1], "help", 4) == 0)
 	{
 		printf("sif:\n");
@@ -91,11 +93,10 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
-	time_t start = time(NULL);
 	SIF_search(sif, 0);
-	time_t end = time(NULL);
-	SIF_print(sif);
-	printf("time: %lf\n", difftime(end, start));
+	DWORD time_end_ms = timeGetTime();
+	SIF_print(sif); 
+	printf("time: %.3lf seconds\n", (double)(time_end_ms - time_start_ms)/1000);
 	SIF_free(sif);
 	return 0;
 }
